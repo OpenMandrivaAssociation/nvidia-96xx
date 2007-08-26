@@ -107,6 +107,7 @@ Requires(postun): update-alternatives >= 1.9.0
 %if %{mdkversion} >= 200800
 Conflicts:	harddrake < 10.4.163
 Conflicts:	drakx-kbd-mouse-x11 < 0.21
+Conflicts:	x11-server-common < 1.3.0.0-17
 %endif
 Provides:	NVIDIA_GLX
 %if %{mdkversion} >= 200800
@@ -190,9 +191,13 @@ installation in the file 'README.install.urpmi' in this directory.
   o Make the line below the only 'glx' related line in the Module section:
 %if %{mdkversion} >= 200710
       Load "glx"
+%if %{mdkversion} >= 200800
+  o Remove any 'ModulePath' lines from the Files section
+%else
   o Make the lines below the only 'ModulePath' lines in the Files section:
       ModulePath "%{nvidia_extensionsdir}"
       ModulePath "%{xorg_libdir}/modules"
+%endif
 %else
       Load "%{nvidia_extensionsdir}/libglx.so"
 %endif
@@ -325,6 +330,9 @@ install -m755 X11R6/lib/modules/drivers/nvidia_drv.so		%{buildroot}%{nvidia_driv
 %if %{mdkversion} >= 200700
 touch								%{buildroot}%{xorg_libdir}/modules/drivers/nvidia_drv.so
 %endif
+%if %{mdkversion} >= 200800
+touch								%{buildroot}%{xorg_libdir}/modules/extensions/libglx.so
+%endif
 
 # ld.so.conf
 install -d -m755		%{buildroot}%{ld_so_conf_dir}
@@ -351,7 +359,7 @@ echo "libXvMCNVIDIA_dynamic.so.1" > %{buildroot}%{nvidia_xvmcconfdir}/XvMCConfig
 # don't strip files
 export DONT_STRIP=1
 
-%post
+%post -n %{driverpkgname}
 %if %{mdkversion} >= 200710
 # XFdrake used to generate an nvidia.conf file
 [ -L %{_sysconfdir}/modprobe.d/nvidia.conf ] || rm -f %{_sysconfdir}/modprobe.d/nvidia.conf
@@ -369,12 +377,15 @@ export DONT_STRIP=1
 	--slave %{_bindir}/nvidia-bug-report.sh nvidia_bug_report %{nvidia_bindir}/nvidia-bug-report.sh \
 	--slave %{_sysconfdir}/X11/XvMCConfig xvmcconfig %{nvidia_xvmcconfdir}/XvMCConfig \
 %if %{mdkversion} >= 200710
-	--slave %{_sysconfdir}/modprobe.d/nvidia.conf nvidia_modconf %{_sysconfdir}/%{drivername}/modprobe.conf
+	--slave %{_sysconfdir}/modprobe.d/nvidia.conf nvidia_modconf %{_sysconfdir}/%{drivername}/modprobe.conf \
+%endif
+%if %{mdkversion} >= 200800
+	--slave %{_libdir}/xorg/modules/extensions/libglx.so libglx %{nvidia_extensionsdir}/libglx.so
 %endif
 %endif
 /sbin/ldconfig
 
-%postun
+%postun -n %{driverpkgname}
 %if %{mdkversion} >= 200700
 if [ ! -f %{ld_so_conf_dir}/%{ld_so_conf_file} ]; then
   %{_sbindir}/update-alternatives --remove gl_conf %{ld_so_conf_dir}/%{ld_so_conf_file}
@@ -481,6 +492,9 @@ rm -rf %{buildroot}
 %dir %{nvidia_extensionsdir}
 %{nvidia_extensionsdir}/libglx.so.%{version}.%{nrelease}
 %{nvidia_extensionsdir}/libglx.so
+%if %{mdkversion} >= 200800
+%ghost %{xorg_libdir}/modules/extensions/libglx.so
+%endif
 
 %if %{mdkversion} >= 200700
 %ghost %{xorg_libdir}/modules/drivers/nvidia_drv.so
