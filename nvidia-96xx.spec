@@ -275,7 +275,6 @@ EOF
 install -d -m755 %{buildroot}%{nvidia_deskdir}
 cat > %{buildroot}%{nvidia_deskdir}/mandriva-nvidia-settings.desktop <<EOF
 [Desktop Entry]
-Encoding=UTF-8
 Name=NVIDIA Display Settings
 Comment=Configure NVIDIA X driver
 Exec=%{_bindir}/nvidia-settings
