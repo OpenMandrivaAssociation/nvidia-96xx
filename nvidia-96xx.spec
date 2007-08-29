@@ -365,11 +365,12 @@ export DONT_STRIP=1
 %endif
 
 %if %{mdkversion} >= 200700
+%define compat_ext %([ "%{_extension}" == ".bz2" ] || echo %{_extension})
 %{_sbindir}/update-alternatives \
 	--install %{_sysconfdir}/ld.so.conf.d/GL.conf gl_conf %{ld_so_conf_dir}/%{ld_so_conf_file} %{priority} \
 	--slave %{_libdir}/xorg/modules/drivers/nvidia_drv.so nvidia_drv %{_libdir}/xorg/modules/drivers/%{drivername}/nvidia_drv.so \
-	--slave %{_mandir}/man1/nvidia-settings.1%{_extension} man_nvidiasettings%{_extension} %{_mandir}/man1/.%{drivername}-settings.1%{_extension} \
-	--slave %{_mandir}/man1/nvidia-xconfig.1%{_extension} man_nvidiaxconfig%{_extension} %{_mandir}/man1/.%{drivername}-xconfig.1%{_extension} \
+	--slave %{_mandir}/man1/nvidia-settings.1%{_extension} man_nvidiasettings%{compat_ext} %{_mandir}/man1/.%{drivername}-settings.1%{_extension} \
+	--slave %{_mandir}/man1/nvidia-xconfig.1%{_extension} man_nvidiaxconfig%{compat_ext} %{_mandir}/man1/.%{drivername}-xconfig.1%{_extension} \
 	--slave %{_datadir}/applications/mandriva-nvidia-settings.desktop nvidia_desktop %{nvidia_deskdir}/mandriva-nvidia-settings.desktop \
 	--slave %{_bindir}/nvidia-settings nvidia_settings %{nvidia_bindir}/nvidia-settings \
 	--slave %{_bindir}/nvidia-xconfig nvidia_xconfig %{nvidia_bindir}/nvidia-xconfig \
@@ -381,6 +382,7 @@ export DONT_STRIP=1
 %if %{mdkversion} >= 200800
 	--slave %{_libdir}/xorg/modules/extensions/libglx.so libglx %{nvidia_extensionsdir}/libglx.so
 %endif
+# empty line so that /sbin/ldconfig is not passed to update-alternatives
 %endif
 /sbin/ldconfig
 
