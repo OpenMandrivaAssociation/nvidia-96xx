@@ -4,7 +4,7 @@
 %define name		nvidia-96xx
 %define version		1.0
 %define nrelease	9639
-%define rel		3
+%define rel		4
 
 %define priority	9600
 
@@ -81,6 +81,9 @@ Version:	%{version}
 Release:	%mkrel %{nrelease}.%{rel}
 Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
+# http://www.nvnews.net/vbulletin/showthread.php?p=1336308
+Source2:	linux-2.6.23rc2-fix.patch.txt
+Source3:	linux-struct-kmem-cache.patch
 License:	Proprietary
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -216,6 +219,10 @@ install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}
 install -m644 src/nv/* %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}
 chmod 0755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/conftest.sh
 
+install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
+cat %SOURCE2 | perl -p -e 's,/usr/src/nv,,' > %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches/linux-2.6.23rc2-fix.patch.txt
+cat %SOURCE3 | perl -p -e 's,/usr/src/nv,,' > %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches/linux-struct-kmem-cache.patch
+
 cat > %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/dkms.conf <<EOF
 PACKAGE_NAME="%{drivername}"
 PACKAGE_VERSION="%{version}-%{release}"
@@ -226,6 +233,10 @@ DEST_MODULE_NAME[0]="%{modulename}"
 %endif
 MAKE[0]="make SYSSRC=\${kernel_source_dir} module"
 AUTOINSTALL="yes"
+PATCH[0]="linux-2.6.23rc2-fix.patch.txt"
+PATCH_MATCH[0]="2\.6\.2[3-9].*"
+PATCH[1]="linux-struct-kmem-cache.patch"
+PATCH_MATCH[1]="2\.6\.2[3-9].*"
 EOF
 
 # OpenGL headers
