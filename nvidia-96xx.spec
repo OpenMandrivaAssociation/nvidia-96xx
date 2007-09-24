@@ -232,6 +232,7 @@ DEST_MODULE_LOCATION[0]="/kernel/drivers/char/drm"
 DEST_MODULE_NAME[0]="%{modulename}"
 %endif
 MAKE[0]="make SYSSRC=\${kernel_source_dir} module"
+CLEAN="make -f Makefile.kbuild clean"
 AUTOINSTALL="yes"
 PATCH[0]="linux-2.6.23rc2-fix.patch.txt"
 PATCH_MATCH[0]="2\.6\.2[3-9].*"
