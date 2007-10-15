@@ -2,17 +2,16 @@
 # I love OpenSource :-(
 
 %define name		nvidia-96xx
-%define version		1.0
-%define nrelease	9639
-%define rel		4
+%define version		96.43.01
+%define rel		1
 
 %define priority	9600
 
 # pkg0: plain archive
 # pkg1: + precompiled modules
 # pkg2: + 32bit compatibility libraries
-%define pkgname32	NVIDIA-Linux-x86-%{version}-%{nrelease}-pkg0
-%define pkgname64	NVIDIA-Linux-x86_64-%{version}-%{nrelease}-pkg2
+%define pkgname32	NVIDIA-Linux-x86-%{version}-pkg0
+%define pkgname64	NVIDIA-Linux-x86_64-%{version}-pkg2
 
 %define nameprefix		x11-driver-video-
 %define drivername		nvidia96xx
@@ -78,12 +77,9 @@
 Summary:	NVIDIA proprietary X.org driver and libraries for most GF2/3/4 class cards
 Name:		%{name}
 Version:	%{version}
-Release:	%mkrel %{nrelease}.%{rel}
+Release:	%mkrel %{rel}
 Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
-# http://www.nvnews.net/vbulletin/showthread.php?p=1336308
-Source2:	linux-2.6.23rc2-fix.patch.txt
-Source3:	linux-struct-kmem-cache.patch
 License:	Proprietary
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -219,10 +215,6 @@ install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}
 install -m644 src/nv/* %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}
 chmod 0755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/conftest.sh
 
-install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
-cat %SOURCE2 | perl -p -e 's,/usr/src/nv,,' > %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches/linux-2.6.23rc2-fix.patch.txt
-cat %SOURCE3 | perl -p -e 's,/usr/src/nv,,' > %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches/linux-struct-kmem-cache.patch
-
 cat > %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/dkms.conf <<EOF
 PACKAGE_NAME="%{drivername}"
 PACKAGE_VERSION="%{version}-%{release}"
@@ -234,10 +226,6 @@ DEST_MODULE_NAME[0]="%{modulename}"
 MAKE[0]="make SYSSRC=\${kernel_source_dir} module"
 CLEAN="make -f Makefile.kbuild clean"
 AUTOINSTALL="yes"
-PATCH[0]="linux-2.6.23rc2-fix.patch.txt"
-PATCH_MATCH[0]="2\.6\.2[3-9].*"
-PATCH[1]="linux-struct-kmem-cache.patch"
-PATCH_MATCH[1]="2\.6\.2[3-9].*"
 EOF
 
 # OpenGL headers
@@ -293,7 +281,7 @@ Exec=%{_bindir}/nvidia-settings
 Icon=%{drivername}-settings
 Terminal=false
 Type=Application
-Categories=Settings;HardwareSettings;X-MandrivaLinux-System-Configuration;
+Categories=GTK;Settings;HardwareSettings;X-MandrivaLinux-System-Configuration;
 EOF
 
 install -d -m755	%{buildroot}%{_datadir}/applications
@@ -307,12 +295,12 @@ convert share/pixmaps/nvidia-settings.png -resize 48x48 %{buildroot}/%{_liconsdi
 
 # install libraries
 install -d -m755						%{buildroot}%{nvidia_libdir}/tls
-install -m755 lib/tls/libnvidia-tls.so.%{version}.%{nrelease}	%{buildroot}%{nvidia_libdir}/tls
-install -m755 lib/libnvidia-tls.so.%{version}.%{nrelease}	%{buildroot}%{nvidia_libdir}
-install -m755 lib/libnvidia-cfg.so.%{version}.%{nrelease}	%{buildroot}%{nvidia_libdir}
-install -m755 lib/libGL.so.%{version}.%{nrelease}		%{buildroot}%{nvidia_libdir}
-install -m755 lib/libGLcore.so.%{version}.%{nrelease}		%{buildroot}%{nvidia_libdir}
-install -m755 X11R6/lib/libXvMCNVIDIA.so.%{version}.%{nrelease}	%{buildroot}%{nvidia_libdir}
+install -m755 lib/tls/libnvidia-tls.so.%{version}		%{buildroot}%{nvidia_libdir}/tls
+install -m755 lib/libnvidia-tls.so.%{version}			%{buildroot}%{nvidia_libdir}
+install -m755 lib/libnvidia-cfg.so.%{version}			%{buildroot}%{nvidia_libdir}
+install -m755 lib/libGL.so.%{version}				%{buildroot}%{nvidia_libdir}
+install -m755 lib/libGLcore.so.%{version}			%{buildroot}%{nvidia_libdir}
+install -m755 X11R6/lib/libXvMCNVIDIA.so.%{version}		%{buildroot}%{nvidia_libdir}
 install -m755 X11R6/lib/libXvMCNVIDIA.a				%{buildroot}%{nvidia_libdir}
 /sbin/ldconfig -n						%{buildroot}%{nvidia_libdir}
 ln -s libGL.so.1						%{buildroot}%{nvidia_libdir}/libGL.so
@@ -320,12 +308,12 @@ ln -s libnvidia-cfg.so.1					%{buildroot}%{nvidia_libdir}/libnvidia-cfg.so
 sed 's,__LIBGL_PATH__,%{nvidia_libdir},' lib/libGL.la >		%{buildroot}%{nvidia_libdir}/libGL.la
 %ifarch %{biarches}
 install -d -m755						%{buildroot}%{nvidia_libdir32}/tls
-install -m755 lib32/tls/libnvidia-tls.so.%{version}.%{nrelease}	%{buildroot}%{nvidia_libdir32}/tls
-install -m755 lib32/libnvidia-tls.so.%{version}.%{nrelease}	%{buildroot}%{nvidia_libdir32}
+install -m755 lib32/tls/libnvidia-tls.so.%{version}		%{buildroot}%{nvidia_libdir32}/tls
+install -m755 lib32/libnvidia-tls.so.%{version}			%{buildroot}%{nvidia_libdir32}
 # NVIDIA installer does not install 32-bit libnvidia-cfg
-install -m755 lib32/libnvidia-cfg.so.%{version}.%{nrelease}	%{buildroot}%{nvidia_libdir32}
-install -m755 lib32/libGL.so.%{version}.%{nrelease}		%{buildroot}%{nvidia_libdir32}
-install -m755 lib32/libGLcore.so.%{version}.%{nrelease}		%{buildroot}%{nvidia_libdir32}
+install -m755 lib32/libnvidia-cfg.so.%{version}			%{buildroot}%{nvidia_libdir32}
+install -m755 lib32/libGL.so.%{version}				%{buildroot}%{nvidia_libdir32}
+install -m755 lib32/libGLcore.so.%{version}			%{buildroot}%{nvidia_libdir32}
 /sbin/ldconfig -n						%{buildroot}%{nvidia_libdir32}
 ln -s libGL.so.1						%{buildroot}%{nvidia_libdir32}/libGL.so
 ln -s libnvidia-cfg.so.1					%{buildroot}%{nvidia_libdir32}/libnvidia-cfg.so
@@ -334,8 +322,8 @@ sed 's,__LIBGL_PATH__,%{nvidia_libdir32},' lib32/libGL.la >	%{buildroot}%{nvidia
 
 # install X.org files
 install -d -m755						%{buildroot}%{nvidia_extensionsdir}
-install -m755 X11R6/lib/modules/extensions/libglx.so.%{version}.%{nrelease}	%{buildroot}%{nvidia_extensionsdir}
-ln -s libglx.so.%{version}.%{nrelease}				%{buildroot}%{nvidia_extensionsdir}/libglx.so
+install -m755 X11R6/lib/modules/extensions/libglx.so.%{version}	%{buildroot}%{nvidia_extensionsdir}
+ln -s libglx.so.%{version}					%{buildroot}%{nvidia_extensionsdir}/libglx.so
 mkdir -p							%{buildroot}%{nvidia_driversdir}
 install -m755 X11R6/lib/modules/drivers/nvidia_drv.so		%{buildroot}%{nvidia_driversdir}
 %if %{mdkversion} >= 200700
@@ -489,21 +477,21 @@ rm -rf %{buildroot}
 
 %dir %{nvidia_libdir}
 %dir %{nvidia_libdir}/tls
-%{nvidia_libdir}/*.so.%{version}.%{nrelease}
+%{nvidia_libdir}/*.so.%{version}
 %{nvidia_libdir}/*.so.1
-%{nvidia_libdir}/tls/*.so.%{version}.%{nrelease}
+%{nvidia_libdir}/tls/*.so.%{version}
 %{nvidia_libdir}/tls/*.so.1
 %ifarch %{biarches}
 %dir %{nvidia_libdir32}
 %dir %{nvidia_libdir32}/tls
-%{nvidia_libdir32}/*.so.%{version}.%{nrelease}
+%{nvidia_libdir32}/*.so.%{version}
 %{nvidia_libdir32}/*.so.1
-%{nvidia_libdir32}/tls/*.so.%{version}.%{nrelease}
+%{nvidia_libdir32}/tls/*.so.%{version}
 %{nvidia_libdir32}/tls/*.so.1
 %endif
 
 %dir %{nvidia_extensionsdir}
-%{nvidia_extensionsdir}/libglx.so.%{version}.%{nrelease}
+%{nvidia_extensionsdir}/libglx.so.%{version}
 %{nvidia_extensionsdir}/libglx.so
 %if %{mdkversion} >= 200800
 %ghost %{xorg_libdir}/modules/extensions/libglx.so
