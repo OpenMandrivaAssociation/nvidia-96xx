@@ -266,16 +266,6 @@ touch %{buildroot}%{_mandir}/man1/nvidia-settings.1%{_extension}
 
 # menu entry
 %if %{mdkversion} <= 200600
-install -d -m755 %{buildroot}/%{_menudir}
-cat <<EOF >%{buildroot}/%{_menudir}/%{driverpkgname}
-?package(%{driverpkgname}):command="%{nvidia_bindir}/nvidia-settings" \
-                  icon=%{drivername}-settings.png \
-                  needs="x11" \
-                  section="System/Configuration/Hardware" \
-                  title="NVIDIA Display Settings" \
-                  longtitle="Configure NVIDIA X driver" \
-                  xdg="true"
-EOF
 %endif
 
 install -d -m755 %{buildroot}%{nvidia_deskdir}
@@ -473,7 +463,6 @@ rm -rf %{buildroot}
 %ghost %{_datadir}/applications/mandriva-nvidia-settings.desktop
 %dir %{nvidia_deskdir}
 %else
-%{_menudir}/%{driverpkgname}
 %endif
 %{nvidia_deskdir}/mandriva-nvidia-settings.desktop
 
