@@ -3,7 +3,7 @@
 
 %define name		nvidia-96xx
 %define version		96.43.05
-%define rel		1
+%define rel		2
 
 %define priority	9600
 
@@ -107,6 +107,7 @@ Requires(postun): update-alternatives >= 1.9.0
 Conflicts:	harddrake < 10.4.163
 Conflicts:	drakx-kbd-mouse-x11 < 0.21
 Conflicts:	x11-server-common < 1.3.0.0-17
+Suggests:	%{drivername}-doc-html
 %endif
 Provides:	NVIDIA_GLX
 %if %{mdkversion} >= 200800
@@ -162,6 +163,15 @@ NVIDIA XvMC static development library and OpenGL headers for most
 NVIDIA GeForce2/3/4 class video cards. This package is not required
 for normal use.
 
+%package -n %{drivername}-doc-html
+Summary:	NVIDIA html documentation (%{drivername})
+Group:		System/Kernel and hardware
+Requires:	%{driverpkgname} = %{version}-%{release}
+
+%description -n %{drivername}-doc-html
+HTML version of the README.txt file provided in package
+%{driverpkgname}.
+
 %prep
 %setup -c -T
 sh %{nsource} --extract-only
@@ -205,6 +215,8 @@ installation in the file 'README.install.urpmi' in this directory.
 - Run "ldconfig" as root.
 %endif
 EOF
+
+mv %{pkgname}/usr/share/doc/html html-doc
 
 %install
 rm -rf %{buildroot}
@@ -520,3 +532,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc %{pkgname}/LICENSE
 %{_usrsrc}/%{drivername}-%{version}-%{release}
+
+%files -n %{drivername}-doc-html
+%defattr(-,root,root)
+%doc html-doc/*
+
