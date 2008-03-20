@@ -419,7 +419,6 @@ rm -rf %{buildroot}
 
 %doc README.install.urpmi README.manual-setup
 %doc %{pkgname}/usr/share/doc/*
-%doc %{pkgname}/usr/include/*
 %doc %{pkgname}/LICENSE
 
 # ld.so.conf, modprobe.conf, xvmcconfig
