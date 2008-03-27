@@ -3,7 +3,7 @@
 
 %define name		nvidia-96xx
 %define version		96.43.05
-%define rel		2
+%define rel		3
 
 %define priority	9600
 
@@ -80,6 +80,7 @@ Version:	%{version}
 Release:	%mkrel %{rel}
 Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
+Source2:	NVIDIA_kernel-96.43.05-2290218.diff.txt
 License:	Proprietary
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -227,8 +228,8 @@ install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}
 install -m644 src/nv/* %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}
 chmod 0755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/conftest.sh
 
-#install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
-#install -m644 %{SOURCE2} %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
+install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
+install -m644 %{SOURCE2} %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
 
 cat > %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/dkms.conf <<EOF
 PACKAGE_NAME="%{drivername}"
@@ -241,6 +242,8 @@ DEST_MODULE_NAME[0]="%{modulename}"
 MAKE[0]="make IGNORE_XEN_PRESENCE=1 SYSSRC=\${kernel_source_dir} module"
 CLEAN="make -f Makefile.kbuild clean"
 AUTOINSTALL="yes"
+PATCH[0]="NVIDIA_kernel-96.43.05-2290218.diff.txt"
+PATCH_MATCH[0]="^2.6.2[5-9]"
 EOF
 
 # OpenGL headers
