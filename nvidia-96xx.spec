@@ -3,7 +3,7 @@
 
 %define name		nvidia-96xx
 %define version		96.43.05
-%define rel		3
+%define rel		4
 
 %define priority	9600
 
@@ -109,6 +109,9 @@ Conflicts:	harddrake < 10.4.163
 Conflicts:	drakx-kbd-mouse-x11 < 0.21
 Conflicts:	x11-server-common < 1.3.0.0-17
 Suggests:	%{drivername}-doc-html
+%endif
+%if %{mdkversion} >= 200810
+Requires:       kmod(%{modulename}) = %{version}
 %endif
 Provides:	NVIDIA_GLX
 %if %{mdkversion} >= 200800
