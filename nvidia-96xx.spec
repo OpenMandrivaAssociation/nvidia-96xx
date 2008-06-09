@@ -405,7 +405,9 @@ export DONT_STRIP=1
 %endif
 # empty line so that /sbin/ldconfig is not passed to update-alternatives
 %endif
+%if %mdkversion < 200900
 /sbin/ldconfig
+%endif
 
 %postun -n %{driverpkgname}
 %if %{mdkversion} >= 200700
@@ -413,7 +415,9 @@ if [ ! -f %{ld_so_conf_dir}/%{ld_so_conf_file} ]; then
   %{_sbindir}/update-alternatives --remove gl_conf %{ld_so_conf_dir}/%{ld_so_conf_file}
 fi
 %endif
+%if %mdkversion < 200900
 /sbin/ldconfig
+%endif
 
 %post -n dkms-%{drivername}
 /usr/sbin/dkms --rpm_safe_upgrade add -m %{drivername} -v %{version}-%{release} && 
