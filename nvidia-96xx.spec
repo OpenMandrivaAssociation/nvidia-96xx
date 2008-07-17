@@ -2,15 +2,15 @@
 # I love OpenSource :-(
 
 %define name		nvidia-96xx
-%define version		96.43.05
-%define rel		4
+%define version		96.43.07
+%define rel		1
 
 %define priority	9600
 
 # pkg0: plain archive
 # pkg1: + precompiled modules
 # pkg2: + 32bit compatibility libraries
-%define pkgname32	NVIDIA-Linux-x86-%{version}-pkg0
+%define pkgname32	NVIDIA-Linux-x86-%{version}-pkg1
 %define pkgname64	NVIDIA-Linux-x86_64-%{version}-pkg2
 
 %define nameprefix		x11-driver-video-
@@ -80,7 +80,6 @@ Version:	%{version}
 Release:	%mkrel %{rel}
 Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
-Source2:	NVIDIA_kernel-96.43.05-2290218.diff.txt
 License:	Proprietary
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -232,7 +231,6 @@ install -m644 src/nv/* %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release
 chmod 0755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/conftest.sh
 
 install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
-install -m644 %{SOURCE2} %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
 
 cat > %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/dkms.conf <<EOF
 PACKAGE_NAME="%{drivername}"
@@ -546,4 +544,3 @@ rm -rf %{buildroot}
 %files -n %{drivername}-doc-html
 %defattr(-,root,root)
 %doc html-doc/*
-
