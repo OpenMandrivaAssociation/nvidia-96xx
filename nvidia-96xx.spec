@@ -10,7 +10,7 @@
 # pkg0: plain archive
 # pkg1: + precompiled modules
 # pkg2: + 32bit compatibility libraries
-%define pkgname32	NVIDIA-Linux-x86-%{version}-pkg1
+%define pkgname32	NVIDIA-Linux-x86-%{version}-pkg0
 %define pkgname64	NVIDIA-Linux-x86_64-%{version}-pkg2
 
 %define nameprefix		x11-driver-video-
