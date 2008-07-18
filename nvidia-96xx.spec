@@ -3,7 +3,7 @@
 
 %define name		nvidia-96xx
 %define version		96.43.07
-%define rel		1
+%define rel		2
 
 %define priority	9600
 
@@ -243,8 +243,6 @@ DEST_MODULE_NAME[0]="%{modulename}"
 MAKE[0]="make IGNORE_XEN_PRESENCE=1 SYSSRC=\${kernel_source_dir} module"
 CLEAN="make -f Makefile.kbuild clean"
 AUTOINSTALL="yes"
-PATCH[0]="NVIDIA_kernel-96.43.05-2290218.diff.txt"
-PATCH_MATCH[0]="^2.6.2[5-9]"
 EOF
 
 # OpenGL headers
