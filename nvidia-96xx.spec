@@ -330,7 +330,8 @@ install -d -m755						%{buildroot}%{nvidia_libdir32}/tls
 install -m755 lib32/tls/libnvidia-tls.so.%{version}		%{buildroot}%{nvidia_libdir32}/tls
 install -m755 lib32/libnvidia-tls.so.%{version}			%{buildroot}%{nvidia_libdir32}
 # NVIDIA installer does not install 32-bit libnvidia-cfg
-install -m755 lib32/libnvidia-cfg.so.%{version}			%{buildroot}%{nvidia_libdir32}
+# (tpg) looks like libnvidia-cfg is gone for good
+#install -m755 lib32/libnvidia-cfg.so.%{version}			%{buildroot}%{nvidia_libdir32}
 install -m755 lib32/libGL.so.%{version}				%{buildroot}%{nvidia_libdir32}
 install -m755 lib32/libGLcore.so.%{version}			%{buildroot}%{nvidia_libdir32}
 /sbin/ldconfig -n						%{buildroot}%{nvidia_libdir32}
