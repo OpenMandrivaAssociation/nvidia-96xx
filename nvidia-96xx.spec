@@ -3,7 +3,7 @@
 
 %define name		nvidia-96xx
 %define version		96.43.07
-%define rel		3
+%define rel		4
 
 %define priority	9600
 
@@ -398,7 +398,10 @@ export DONT_STRIP=1
 	--slave %{_sysconfdir}/modprobe.d/nvidia.conf nvidia_modconf %{_sysconfdir}/%{drivername}/modprobe.conf \
 %endif
 %if %{mdkversion} >= 200800
-	--slave %{_libdir}/xorg/modules/extensions/libglx.so libglx %{nvidia_extensionsdir}/libglx.so
+	--slave %{_libdir}/xorg/modules/extensions/libglx.so libglx %{nvidia_extensionsdir}/libglx.so \
+%endif
+%if %{mdkversion} >= 200900
+	--slave %{_libdir}/xorg/modules/extensions/libdri.so libdri.so %{_libdir}/xorg/modules/extensions/standard/libdri.so
 %endif
 # empty line so that /sbin/ldconfig is not passed to update-alternatives
 %endif
