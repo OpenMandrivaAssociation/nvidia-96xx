@@ -182,7 +182,9 @@ HTML version of the README.txt file provided in package
 sh %{nsource} --extract-only
 rm -rf %{pkgname}/usr/src/nv/precompiled
 
+pushd %{pkgname}
 %patch -p1
+popd
 
 cat > README.install.urpmi <<EOF
 This driver is for GeForce 3, GeForce 4 and GeForce 2 MX cards.
