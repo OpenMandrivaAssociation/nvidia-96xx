@@ -2,8 +2,8 @@
 # I love OpenSource :-(
 
 %define name		nvidia-96xx
-%define version		96.43.07
-%define rel		5
+%define version		96.43.09
+%define rel		1
 
 %define priority	9600
 
@@ -80,8 +80,6 @@ Version:	%{version}
 Release:	%mkrel %{rel}
 Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
-Source2:	nvidia96xx-96.43.07-kill_proc.patch
-Patch:		nvidia96xx-96.43.07-2.6.27.patch
 License:	Proprietary
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -182,10 +180,6 @@ HTML version of the README.txt file provided in package
 sh %{nsource} --extract-only
 rm -rf %{pkgname}/usr/src/nv/precompiled
 
-pushd %{pkgname}
-%patch -p1
-popd
-
 cat > README.install.urpmi <<EOF
 This driver is for GeForce 3, GeForce 4 and GeForce 2 MX cards.
 
@@ -237,8 +231,6 @@ install -m644 src/nv/* %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release
 chmod 0755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/conftest.sh
 
 install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
-install -m644 %{_sourcedir}/nvidia96xx-96.43.07-kill_proc.patch \
-              %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
 
 cat > %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/dkms.conf <<EOF
 PACKAGE_NAME="%{drivername}"
@@ -251,8 +243,6 @@ DEST_MODULE_NAME[0]="%{modulename}"
 MAKE[0]="make IGNORE_XEN_PRESENCE=1 SYSSRC=\${kernel_source_dir} module"
 CLEAN="make -f Makefile.kbuild clean"
 AUTOINSTALL="yes"
-PATCH[0]="nvidia96xx-96.43.07-kill_proc.patch"
-PATCH_MATCH[0]="^2\.6\.(2[7-9])|([3-9][0-9]+)|([1-9][0-9][0-9]+)"
 EOF
 
 # OpenGL headers
