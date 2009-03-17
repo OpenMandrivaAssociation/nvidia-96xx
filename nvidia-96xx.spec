@@ -3,7 +3,7 @@
 
 %define name		nvidia-96xx
 %define version		96.43.11
-%define rel		1
+%define rel		2
 
 %define priority	9600
 
@@ -18,8 +18,9 @@
 %define driverpkgname		x11-driver-video-nvidia96xx
 %define modulename		%{drivername}
 %define xorg_libdir		%{_libdir}/xorg
+%define xorg_extra_modules	%{_libdir}/xorg/extra-modules
 %define nvidia_driversdir	%{xorg_libdir}/modules/drivers/%{drivername}
-%define nvidia_extensionsdir	%{xorg_libdir}/modules/extensions/%{drivername}
+%define nvidia_extensionsdir	%{_libdir}/%{drivername}/xorg
 %define nvidia_libdir		%{_libdir}/%{drivername}
 %define nvidia_libdir32		%{_prefix}/lib/%{drivername}
 %define nvidia_bindir		%{nvidia_libdir}/bin
@@ -27,6 +28,10 @@
 %define nvidia_xvmcconfdir	%{_sysconfdir}/%{drivername}
 %define ld_so_conf_dir		%{_sysconfdir}/%{drivername}
 %define ld_so_conf_file		ld.so.conf
+
+%if %{mdkversion} <= 200900
+%define nvidia_extensionsdir	%{xorg_libdir}/modules/extensions/%{drivername}
+%endif
 
 %if %{mdkversion} <= 200710
 %define nameprefix		%{nil}
@@ -102,6 +107,9 @@ Group:		System/Kernel and hardware
 %if %{mdkversion} >= 200700
 Requires(post): update-alternatives >= 1.9.0
 Requires(postun): update-alternatives >= 1.9.0
+%endif
+%if %{mdkversion} >= 200910
+Conflicts:	x11-server-common < 1.6.0-3
 %endif
 %if %{mdkversion} >= 200800
 Conflicts:	harddrake < 10.4.163
@@ -347,8 +355,10 @@ install -m755 X11R6/lib/modules/drivers/nvidia_drv.so		%{buildroot}%{nvidia_driv
 %if %{mdkversion} >= 200700
 touch								%{buildroot}%{xorg_libdir}/modules/drivers/nvidia_drv.so
 %endif
+%if %{mdkversion} <= 200900
 %if %{mdkversion} >= 200800
 touch								%{buildroot}%{xorg_libdir}/modules/extensions/libglx.so
+%endif
 %endif
 
 # ld.so.conf
@@ -397,11 +407,16 @@ export DONT_STRIP=1
 %if %{mdkversion} >= 200710
 	--slave %{_sysconfdir}/modprobe.d/nvidia.conf nvidia_modconf %{_sysconfdir}/%{drivername}/modprobe.conf \
 %endif
+%if %{mdkversion} >= 200910
+	--slave %{xorg_extra_modules} xorg_extra_modules %{nvidia_extensionsdir} \
+	--slave %{_bindir}/Xorg Xorg %{_bindir}/Xorg-1.6
+%else
 %if %{mdkversion} >= 200800
 	--slave %{_libdir}/xorg/modules/extensions/libglx.so libglx %{nvidia_extensionsdir}/libglx.so \
 %endif
 %if %{mdkversion} >= 200900
 	--slave %{_libdir}/xorg/modules/extensions/libdri.so libdri.so %{_libdir}/xorg/modules/extensions/standard/libdri.so
+%endif
 %endif
 # empty line so that /sbin/ldconfig is not passed to update-alternatives
 %endif
@@ -515,8 +530,10 @@ rm -rf %{buildroot}
 %dir %{nvidia_extensionsdir}
 %{nvidia_extensionsdir}/libglx.so.%{version}
 %{nvidia_extensionsdir}/libglx.so
+%if %{mdkversion} <= 200900
 %if %{mdkversion} >= 200800
 %ghost %{xorg_libdir}/modules/extensions/libglx.so
+%endif
 %endif
 
 %if %{mdkversion} >= 200700
