@@ -3,7 +3,7 @@
 
 %define name		nvidia-96xx
 %define version		96.43.11
-%define rel		2
+%define rel		3
 
 %define priority	9600
 
@@ -419,6 +419,15 @@ export DONT_STRIP=1
 %endif
 %endif
 # empty line so that /sbin/ldconfig is not passed to update-alternatives
+
+# ensure the links are created if its current state is manual
+link_state=$(%{_sbindir}/update-alternatives --display gl_conf | head -1)
+link_state=$(expr match "$link_state" 'gl_conf - status is \(.*\).')
+
+if [ "$link_state" != "auto" ]; then
+	current_link=$(readlink %{_sysconfdir}/alternatives/gl_conf)
+	%{_sbindir}/update-alternatives --set gl_conf "$current_link"
+fi
 %endif
 # explicit /sbin/ldconfig due to alternatives
 /sbin/ldconfig
