@@ -2,8 +2,8 @@
 # I love OpenSource :-(
 
 %define name		nvidia-96xx
-%define version		96.43.11
-%define rel		6
+%define version		96.43.12
+%define rel		1
 
 %define priority	9600
 
@@ -85,7 +85,6 @@ Version:	%{version}
 Release:	%mkrel %{rel}
 Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
-Source2:	nvidia96xx-96.43.11-kernel_2.6.30.patch
 License:	Proprietary
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -239,9 +238,9 @@ install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}
 install -m644 src/nv/* %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}
 chmod 0755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/conftest.sh
 
-install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
-install -m644 %{_sourcedir}/nvidia96xx-96.43.11-kernel_2.6.30.patch \
-              %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
+#install -d -m755 %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
+#install -m644 %{_sourcedir}/some.patch \
+#              %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/patches
 
 cat > %{buildroot}%{_usrsrc}/%{drivername}-%{version}-%{release}/dkms.conf <<EOF
 PACKAGE_NAME="%{drivername}"
@@ -255,8 +254,6 @@ MAKE[0]="make IGNORE_XEN_PRESENCE=1 SYSSRC=\${kernel_source_dir} module"
 CLEAN="make -f Makefile.kbuild clean"
 AUTOINSTALL="yes"
 MAKE[0]="make IGNORE_XEN_PRESENCE=1 SYSSRC=\${kernel_source_dir} module"
-PATCH[0]="nvidia96xx-96.43.11-kernel_2.6.30.patch"
-PATCH_MATCH[0]="^2\.6\.(3[0-9])|([0-9][0-9]+)|([1-9][0-9][0-9]+)"
 EOF
 
 # OpenGL headers
