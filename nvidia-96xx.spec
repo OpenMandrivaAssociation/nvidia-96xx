@@ -104,9 +104,9 @@ ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	ImageMagick
 BuildRequires:  gtk+2-devel
 BuildRequires:  libxxf86vm-devel
-BuildRequires: MesaGL-devel
+BuildRequires:	MesaGL-devel
 %if %{mdkversion} >= 200700
-BuildRequires: libxv-devel
+BuildRequires:	libxv-devel
 %endif
 %if "%{driverpkgname}" == "nvidia"
 # old nvidia package had different versioning
