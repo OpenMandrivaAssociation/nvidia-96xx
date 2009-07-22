@@ -30,8 +30,11 @@
 %define ld_so_conf_dir		%{_sysconfdir}/%{drivername}
 %define ld_so_conf_file		ld.so.conf
 
+%if %{mdkversion} <= 200910
+%define nvidia_driversdir	%{xorg_libdir}/modules/drivers/%{drivername}
+%endif
+
 %if %{mdkversion} <= 200900
-%define nvidia_driversdir       %{xorg_libdir}/modules/drivers/%{drivername}
 %define nvidia_extensionsdir	%{xorg_libdir}/modules/extensions/%{drivername}
 %define nvidia_modulesdir       %{xorg_libdir}/modules
 %endif
@@ -403,7 +406,6 @@ install -d -m755				%{buildroot}%{nvidia_driversdir}
 install -m755 X11R6/lib/modules/drivers/*	%{buildroot}%{nvidia_driversdir}
 
 %if %{mdkversion} >= 200700 && %{mdkversion} <= 200910
-install -d -m755 %{buildroot}%{xorg_libdir}/modules/drivers
 touch %{buildroot}%{xorg_libdir}/modules/drivers/nvidia_drv.so
 %endif
 %if %{mdkversion} >= 200800 && %{mdkversion} <= 200900
@@ -611,15 +613,11 @@ rm -rf %{buildroot}
 %if %{mdkversion} >= 200910
 # 2009.1+ (/usr/lib/drivername/xorg)
 %dir %{nvidia_modulesdir}
-%else
-# 2006.0 - 2009.0
-%dir %{nvidia_extensionsdir}
-%if %{mdkversion} >= 200700
-# 2007.0 - 2009.0
-%dir %{nvidia_driversdir}
-%endif
 %endif
 
+%if %{mdkversion} <= 200900
+%dir %{nvidia_extensionsdir}
+%endif
 %{nvidia_extensionsdir}/libglx.so.%{version}
 %{nvidia_extensionsdir}/libglx.so
 %if %{mdkversion} >= 200800 && %{mdkversion} <= 200900
@@ -627,6 +625,7 @@ rm -rf %{buildroot}
 %endif
 
 %if %{mdkversion} >= 200700 && %{mdkversion} <= 200910
+%dir %{nvidia_driversdir}
 %ghost %{xorg_libdir}/modules/drivers/nvidia_drv.so
 %endif
 %{nvidia_driversdir}/nvidia_drv.so
