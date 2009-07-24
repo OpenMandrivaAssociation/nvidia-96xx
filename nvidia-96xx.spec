@@ -489,6 +489,10 @@ export DONT_STRIP=1
 # explicit /sbin/ldconfig due to alternatives
 /sbin/ldconfig
 
+%if %{mdkversion} < 200900
+%update_menus
+%endif
+
 %postun -n %{driverpkgname}
 %if %{mdkversion} >= 200700
 if [ ! -f %{ld_so_conf_dir}/%{ld_so_conf_file} ]; then
@@ -497,6 +501,10 @@ fi
 %endif
 # explicit /sbin/ldconfig due to alternatives
 /sbin/ldconfig
+
+%if %{mdkversion} < 200900
+%clean_menus
+%endif
 
 %post -n dkms-%{drivername}
 /usr/sbin/dkms --rpm_safe_upgrade add -m %{drivername} -v %{version}-%{release} && 
