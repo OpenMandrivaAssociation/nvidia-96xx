@@ -3,7 +3,7 @@
 
 %define name		nvidia-96xx
 %define version		96.43.13
-%define rel		6
+%define rel		7
 
 %define priority	9600
 
