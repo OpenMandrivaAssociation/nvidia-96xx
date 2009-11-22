@@ -101,6 +101,8 @@ Patch1:		nvidia-settings-enable-dyntwinview-mdv.patch
 Patch2:		nvidia-xconfig-ldflags-order.patch
 # Understand Disable keyword in xorg.conf, from upstream 190.40:
 Patch4:		nvidia-xf86config-parser-add-disable-keyword.patch
+# (tpg) in xserver-1.7 a X_XF86VidModeGetGammaRampSize is in xf86vmproto.h and not in xf86vmode.h
+Patch5:		nvidia-settings-1.0-missing-header.patch
 License:	Freeware
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -213,6 +215,7 @@ sh %{nsource} --extract-only
 
 cd nvidia-settings-1.0
 %patch4 -p1
+%patch5 -p1
 cd ..
 cd nvidia-xconfig-1.0
 %patch4 -p2
@@ -269,16 +272,19 @@ sed -i 's|-O ||' nvidia-xconfig-1.0/Makefile
 rm nvidia-settings-1.0/src/*/*.a
 
 %build
-cd nvidia-settings-1.0
-cd src/libXNVCtrl
-# contains Imakefile file which does not seem to work
+pushd nvidia-settings-1.0
+pushd src/libXNVCtrl
+#contains Imakefile file which does not seem to work
 gcc %{optflags} -c -o NVCtrl.o NVCtrl.c
 ar rv libXNVCtrl.a NVCtrl.o
 ranlib libXNVCtrl.a
-cd -
+popd
 %make CFLAGS="%optflags" LDFLAGS="%{?ldflags}"
-cd ../nvidia-xconfig-1.0
+popd
+
+pushd nvidia-xconfig-1.0
 %make CFLAGS="%optflags %{?ldflags} -IXF86Config-parser"
+popd
 
 %install
 rm -rf %{buildroot}
