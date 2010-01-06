@@ -258,7 +258,7 @@ installation in the file 'README.install.urpmi' in this directory.
 %endif
 %if %{mdkversion} >= 200700
 - Run "update-alternatives --set gl_conf %{ld_so_conf_dir}/%{ld_so_conf_file}" as root.
-- Run "ldconfig" as root.
+- Run "ldconfig -X" as root.
 %endif
 EOF
 
@@ -509,7 +509,7 @@ export EXCLUDE_FROM_STRIP="$(find %{buildroot} -type f \! -name nvidia-settings 
 # empty line so that /sbin/ldconfig is not passed to update-alternatives
 %endif
 # explicit /sbin/ldconfig due to alternatives
-/sbin/ldconfig
+/sbin/ldconfig -X
 
 %if %{mdkversion} < 200900
 %update_menus
@@ -522,7 +522,7 @@ if [ ! -f %{ld_so_conf_dir}/%{ld_so_conf_file} ]; then
 fi
 %endif
 # explicit /sbin/ldconfig due to alternatives
-/sbin/ldconfig
+/sbin/ldconfig -X
 
 %if %{mdkversion} < 200900
 %clean_menus
