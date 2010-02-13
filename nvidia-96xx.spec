@@ -2,8 +2,8 @@
 # I love OpenSource :-(
 
 %define name		nvidia-96xx
-%define version		96.43.14
-%define rel		2
+%define version		96.43.16
+%define rel		1
 
 %define priority	9600
 
@@ -103,8 +103,6 @@ Patch2:		nvidia-xconfig-ldflags-order.patch
 Patch4:		nvidia-xf86config-parser-add-disable-keyword.patch
 # (tpg) in 2010.1+ X_XF86VidModeGetGammaRampSize is in xf86vmproto.h and not in xf86vmode.h
 Patch5:		nvidia-settings-1.0-missing-header.patch
-# fix build with 2.6.33+
-Patch6:		nvidia-96xx-2.6.33.patch
 License:	Freeware
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -222,10 +220,6 @@ cd ..
 cd nvidia-xconfig-1.0
 %patch4 -p2
 cd ..
-
-cd %pkgname
-%patch6 -p0
-cd -
 
 rm -rf %{pkgname}/usr/src/nv/precompiled
 
