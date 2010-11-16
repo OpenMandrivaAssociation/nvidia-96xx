@@ -2,8 +2,11 @@
 # I love OpenSource :-(
 
 %define name		nvidia-96xx
-%define version		96.43.18
+%define version		96.43.19
 %define rel		1
+
+# the highest supported videodrv abi
+%define videodrv_abi    8
 
 %define priority	9600
 
@@ -153,6 +156,10 @@ Provides:	nvidia96xx = %{version}-%{release}
 %if %{mdkversion} <= 200600
 Conflicts:	nvidia_legacy
 %endif
+# Conflict with the next videodrv ABI break.
+# The NVIDIA driver supports the previous ABI versions as well and therefore
+# a strict version-specific requirement would not be enough.
+Conflicts:      xserver-abi(videodrv-%(echo $((%{videodrv_abi} + 1))))
 
 %description -n %{driverpkgname}
 NVIDIA proprietary X.org graphics driver, related libraries and
