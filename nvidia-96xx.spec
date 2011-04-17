@@ -3,7 +3,7 @@
 
 %define name		nvidia-96xx
 %define version		96.43.19
-%define rel		1.test.2
+%define rel		2
 
 # the highest supported videodrv abi
 %define videodrv_abi    8
