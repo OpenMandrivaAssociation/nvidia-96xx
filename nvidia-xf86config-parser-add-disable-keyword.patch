@@ -1,0 +1,114 @@
+Index: nvidia-settings-1.0/src/XF86Config-parser/Module.c
+===================================================================
+--- nvidia-settings-1.0/src/XF86Config-parser/Module.c
++++ nvidia-settings-1.0/src/XF86Config-parser/Module.c	2009-10-18 14:42:11.523301034 +0300
+@@ -73,6 +73,7 @@
+     {ENDSECTION, "endsection"},
+     {LOAD, "load"},
+     {LOAD_DRIVER, "loaddriver"},
++    {DISABLE, "disable"},
+     {SUBSECTION, "subsection"},
+     {-1, ""},
+ };
+@@ -145,6 +146,12 @@
+                 xconfigAddNewLoadDirective (ptr->loads, val.str,
+                                          XCONFIG_LOAD_DRIVER, NULL, TRUE);
+             break;
++        case DISABLE:
++            if (xconfigGetSubToken (&(ptr->comment)) != STRING)
++                Error (QUOTE_MSG, "Disable");
++	    ptr->disables = xconfigAddNewLoadDirective (ptr->disables, val.str,
++                                        XCONFIG_DISABLE_MODULE, NULL, TRUE);
++            break;
+         case SUBSECTION:
+             if (xconfigGetSubToken (&(ptr->comment)) != STRING)
+                         Error (QUOTE_MSG, "SubSection");
+@@ -210,6 +217,19 @@
+ #endif
+         }
+     }
++    for (lptr = ptr->disables; lptr; lptr = lptr->next)
++    {
++        switch (lptr->type)
++        {
++        case XCONFIG_DISABLE_MODULE:
++            fprintf (cf, "    Disable        \"%s\"", lptr->name);
++            if (lptr->comment)
++                fprintf(cf, "%s", lptr->comment);
++            else
++                fputc('\n', cf);
++            break;
++        }
++    }
+ }
+ 
+ XConfigLoadPtr
+@@ -260,15 +280,11 @@
+     return head;
+ }
+ 
+-void
+-xconfigFreeModules (XConfigModulePtr ptr)
++static void
++FreeModule (XConfigLoadPtr lptr)
+ {
+-    XConfigLoadPtr lptr;
+     XConfigLoadPtr prev;
+ 
+-    if (ptr == NULL)
+-        return;
+-    lptr = ptr->loads;
+     while (lptr)
+     {
+         TEST_FREE (lptr->name);
+@@ -277,6 +293,17 @@
+         lptr = lptr->next;
+         free (prev);
+     }
++}
++
++void
++xconfigFreeModules (XConfigModulePtr ptr)
++{
++    if (ptr == NULL)
++        return;
++
++    FreeModule(ptr->loads);
++    FreeModule(ptr->disables);
++
+     TEST_FREE (ptr->comment);
+     free (ptr);
+ }
+Index: nvidia-settings-1.0/src/XF86Config-parser/xf86Parser.h
+===================================================================
+--- nvidia-settings-1.0/src/XF86Config-parser/xf86Parser.h
++++ nvidia-settings-1.0/src/XF86Config-parser/xf86Parser.h	2009-10-18 14:42:11.586550049 +0300
+@@ -170,7 +170,7 @@
+ /* Values for load_type */
+ #define XCONFIG_LOAD_MODULE    0
+ #define XCONFIG_LOAD_DRIVER    1
+-
++#define XCONFIG_DISABLE_MODULE 2
+ 
+ 
+ /*
+@@ -187,6 +187,7 @@
+ 
+ typedef struct {
+     XConfigLoadPtr  loads;
++    XConfigLoadPtr  disables;
+     char           *comment;
+ } XConfigModuleRec, *XConfigModulePtr;
+ 
+Index: nvidia-settings-1.0/src/XF86Config-parser/xf86tokens.h
+===================================================================
+--- nvidia-settings-1.0/src/XF86Config-parser/xf86tokens.h
++++ nvidia-settings-1.0/src/XF86Config-parser/xf86tokens.h	2009-10-18 14:42:11.587550929 +0300
+@@ -167,6 +167,7 @@
+     /* Module tokens */
+     LOAD,
+     LOAD_DRIVER,
++    DISABLE,
+     
+     /* Device tokens */
+     DRIVER,
