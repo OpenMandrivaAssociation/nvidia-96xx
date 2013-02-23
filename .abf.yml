@@ -1,5 +1,5 @@
 sources:
-  "NVIDIA-Linux-x86_64-96.43.20-pkg2.run:"	b5ab8b3e9f06418720971187d53837db90af5f8a
-  "NVIDIA-Linux-x86-96.43.20-pkg0.run:"	714632bf918eaae50d46e9a4a5252ebbe9e6cfb1
-  "nvidia-settings-96.43.20.tar.gz:"	2790ad913633f9c9ccc4f2be0c24ff418abe326f
-  "nvidia-xconfig-96.43.20.tar.gz:"	b78c8e4a26830c57605753290021c9e8199ba9de
+  NVIDIA-Linux-x86_64-96.43.20-pkg2.run: b5ab8b3e9f06418720971187d53837db90af5f8a
+  NVIDIA-Linux-x86-96.43.20-pkg0.run: 714632bf918eaae50d46e9a4a5252ebbe9e6cfb1
+  nvidia-settings-96.43.20.tar.gz: 2790ad913633f9c9ccc4f2be0c24ff418abe326f
+  nvidia-xconfig-96.43.20.tar.gz: b78c8e4a26830c57605753290021c9e8199ba9de
