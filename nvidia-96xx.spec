@@ -706,7 +706,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{_includedir}/%{drivername}
 %{nvidia_libdir}/libXvMCNVIDIA.a
-%{nvidia_libdir}/libXvMCNVIDIA.a
 %{nvidia_libdir}/libGL.so
 %{nvidia_libdir}/libnvidia-cfg.so
 %ifarch %{biarches}
