@@ -295,6 +295,10 @@ sed -i 's|-O ||' nvidia-xconfig-1.0/Makefile
 rm nvidia-settings-1.0/src/*/*.a
 
 %build
+mkdir -p bfd
+ln -sf $(which ld.bfd) bfd/ld
+export PATH="$PWD/bfd:$PATH"
+
 pushd nvidia-settings-1.0
 pushd src/libXNVCtrl
 #contains Imakefile file which does not seem to work
