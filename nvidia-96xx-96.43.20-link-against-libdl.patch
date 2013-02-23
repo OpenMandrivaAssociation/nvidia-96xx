@@ -1,0 +1,11 @@
+--- nvidia-96xx-96.43.20/nvidia-settings-1.0/Makefile.libdl~	2013-02-23 09:55:03.980751090 +0100
++++ nvidia-96xx-96.43.20/nvidia-settings-1.0/Makefile	2013-02-23 09:55:09.674845096 +0100
+@@ -144,7 +144,7 @@ SRCDIRS := $(addprefix $(CURDIR)/, $(REL
+ INC_FLAGS := $(addprefix -I , $(RELATIVE_SRCDIRS))
+ 
+ ALL_CFLAGS = $(CFLAGS) $(LOCAL_CFLAGS) $(X11_CFLAGS) $(GTK_CFLAGS) $(INC_FLAGS)
+-ALL_LDFLAGS = $(LD_RUN_FLAG) $(LDFLAGS) $(GTK_LDFLAGS) $(X11_LIBS) -lm
++ALL_LDFLAGS = $(LD_RUN_FLAG) $(LDFLAGS) $(GTK_LDFLAGS) $(X11_LIBS) -lm -ldl
+ 
+ CPPFLAGS = $(ALL_CFLAGS)
+ 
