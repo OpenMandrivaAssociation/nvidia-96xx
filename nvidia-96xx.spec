@@ -244,7 +244,9 @@ cd nvidia-xconfig-1.0
 %patch4 -p2
 cd ..
 %patch6 -p1 -b .libdl~
-%patch7 -p1 -b .3x~
+pushd %{pkgname}
+%patch7 -p2 -b .3x~
+popd
 
 rm -rf %{pkgname}/usr/src/nv/precompiled
 
