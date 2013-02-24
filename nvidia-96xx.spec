@@ -3,7 +3,7 @@
 
 %define name		nvidia-96xx
 %define version		96.43.20
-%define rel		2
+%define rel		3
 
 # the highest supported videodrv abi
 %define videodrv_abi    8
@@ -120,6 +120,7 @@ Patch4:		nvidia-xf86config-parser-add-disable-keyword.patch
 # (tpg) in 2010.1+ X_XF86VidModeGetGammaRampSize is in xf86vmproto.h and not in xf86vmode.h
 Patch5:		nvidia-settings-1.0-missing-header.patch
 Patch6:		nvidia-96xx-96.43.20-link-against-libdl.patch
+Patch7:		nvidia-96xx-96.43.20-dont-check-patchlevel-and-sublevel.patch
 License:	Freeware
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
@@ -243,6 +244,7 @@ cd nvidia-xconfig-1.0
 %patch4 -p2
 cd ..
 %patch6 -p1 -b .libdl~
+%patch7 -p1 -b .3x~
 
 rm -rf %{pkgname}/usr/src/nv/precompiled
 
