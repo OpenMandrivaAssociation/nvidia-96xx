@@ -1,10 +1,5 @@
-
 # I love OpenSource :-(
-
-%define name		nvidia-96xx
-%define version		96.43.23
 %define xconfigversion	96.43.20
-%define rel		1
 
 # the highest supported videodrv abi
 %define videodrv_abi    8
@@ -76,7 +71,7 @@
 # Other packages should not require any NVIDIA libraries, and this package
 # should not be pulled in when libGL.so.1 is required
 %if %{_use_internal_dependency_generator}
-%define __noautoprov '\\.so'
+%define __noautoprov '\\.so|libGL\\.so\\.1(.*)|devel\\(libGL(.*)'
 %define common_requires_exceptions libGLcore\\.so|libnvidia.*\\.so
 %else
 %define _provides_exceptions \\.so
@@ -102,9 +97,9 @@
 %endif
 
 Summary:	NVIDIA proprietary X.org driver and libraries for most GF2/3/4 class cards
-Name:		%{name}
-Version:	%{version}
-Release:	%mkrel %{rel}
+Name:		nvidia-96xx
+Version:	96.43.23
+Release:	2
 Source0:	ftp://download.nvidia.com/XFree86/Linux-x86/%{version}/%{pkgname32}.run
 Source1:	ftp://download.nvidia.com/XFree86/Linux-x86_64/%{version}/%{pkgname64}.run
 # GPLv2 source code; see also http://cgit.freedesktop.org/~aplattner/
@@ -123,16 +118,15 @@ Patch5:		nvidia-settings-1.0-missing-header.patch
 Patch6:		nvidia-96xx-96.43.20-link-against-libdl.patch
 Patch7:		nvidia-96xx-96.43.20-dont-check-patchlevel-and-sublevel.patch
 License:	Freeware
-BuildRoot:	%{_tmppath}/%{name}-buildroot
 URL:		http://www.nvidia.com/object/unix.html
 Group: 		System/Kernel and hardware
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	imagemagick
-BuildRequires:  gtk+2-devel
-BuildRequires:  libxxf86vm-devel
-BuildRequires:	mesagl-devel
+BuildRequires:  pkgconfig(gtk+-x11-2.0)
+BuildRequires:  pkgconfig(xxf86vm)
+BuildRequires:	pkgconfig(gl)
 %if %{mdkversion} >= 200700
-BuildRequires:	libxv-devel
+BuildRequires:	pkgconfig(xv)
 %endif
 %if "%{driverpkgname}" == "nvidia"
 # old nvidia package had different versioning
