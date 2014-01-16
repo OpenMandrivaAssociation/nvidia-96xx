@@ -2,7 +2,7 @@
 %define xconfigversion	96.43.20
 
 # the highest supported videodrv abi
-%define videodrv_abi    8
+%define videodrv_abi    12
 
 %define priority	9600
 
