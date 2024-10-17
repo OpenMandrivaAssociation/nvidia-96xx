@@ -118,7 +118,7 @@ Patch5:		nvidia-settings-1.0-missing-header.patch
 Patch6:		nvidia-96xx-96.43.20-link-against-libdl.patch
 Patch7:		nvidia-96xx-96.43.20-dont-check-patchlevel-and-sublevel.patch
 License:	Freeware
-URL:		http://www.nvidia.com/object/unix.html
+URL:		https://www.nvidia.com/object/unix.html
 Group: 		System/Kernel and hardware
 ExclusiveArch:	%{ix86} x86_64
 BuildRequires:	imagemagick
